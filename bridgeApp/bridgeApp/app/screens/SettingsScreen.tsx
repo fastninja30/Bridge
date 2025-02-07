@@ -8,10 +8,10 @@ const SettingsScreen = ({ navigation }) => {
   const [locationEnabled, setLocationEnabled] = useState(true);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, darkModeEnabled && styles.darkContainer]}>
       {/* Notification Settings */}
-      <View style={styles.settingItem}>
-        <Text style={styles.settingText}>Enable Notifications</Text>
+      <View style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}>
+        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Enable Notifications</Text>
         <Switch
           value={notificationsEnabled}
           onValueChange={setNotificationsEnabled}
@@ -21,8 +21,8 @@ const SettingsScreen = ({ navigation }) => {
       </View>
 
       {/* Dark Mode Settings */}
-      <View style={styles.settingItem}>
-        <Text style={styles.settingText}>Dark Mode</Text>
+      <View style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}>
+        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Dark Mode</Text>
         <Switch
           value={darkModeEnabled}
           onValueChange={setDarkModeEnabled}
@@ -32,8 +32,8 @@ const SettingsScreen = ({ navigation }) => {
       </View>
 
       {/* Location Settings */}
-      <View style={styles.settingItem}>
-        <Text style={styles.settingText}>Enable Location</Text>
+      <View style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}>
+        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Enable Location</Text>
         <Switch
           value={locationEnabled}
           onValueChange={setLocationEnabled}
@@ -44,27 +44,26 @@ const SettingsScreen = ({ navigation }) => {
 
       {/* Privacy Settings */}
       <TouchableOpacity
-        style={styles.settingItem}
+        style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}
         onPress={() => navigation.navigate('PrivacySettings')}
       >
-        <Text style={styles.settingText}>Privacy Settings</Text>
-        <Text style={styles.arrow}>→</Text>
+        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Privacy Settings</Text>
+        <Text style={[styles.arrow, darkModeEnabled && styles.darkText]}>→</Text>
       </TouchableOpacity>
 
       {/* Account Settings */}
       <TouchableOpacity
-        style={styles.settingItem}
+        style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}
         onPress={() => navigation.navigate('AccountSettings')}
       >
-        <Text style={styles.settingText}>Account Settings</Text>
-        <Text style={styles.arrow}>→</Text>
+        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Account Settings</Text>
+        <Text style={[styles.arrow, darkModeEnabled && styles.darkText]}>→</Text>
       </TouchableOpacity>
 
       {/* Logout Button */}
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={() => {
-          // Handle logout logic here
           console.log('User logged out');
         }}
       >
@@ -80,6 +79,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     padding: 16,
   },
+  darkContainer: {
+    backgroundColor: '#1e1e1e',
+  },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -94,9 +96,15 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  darkSettingItem: {
+    backgroundColor: '#2f2f2f',
+  },
   settingText: {
     fontSize: 16,
     color: '#333',
+  },
+  darkText: {
+    color: '#fff',
   },
   arrow: {
     fontSize: 18,
