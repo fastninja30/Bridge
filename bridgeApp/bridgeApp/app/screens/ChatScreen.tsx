@@ -4,7 +4,7 @@ import { useRoute } from '@react-navigation/native';
 
 const ChatScreen = () => {
   const route = useRoute();
-  const { userId } = route.params;
+  //const { userId } = route.params;
 
   const [messages, setMessages] = useState([
     { id: '1', text: 'Hey! How are you?', sender: 'other' },
