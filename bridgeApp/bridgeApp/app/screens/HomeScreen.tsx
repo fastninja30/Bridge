@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
+import { useTheme } from '../ThemeContext';
 
 const HomeScreen = () => {
   const [profiles, setProfiles] = useState([
@@ -9,24 +10,25 @@ const HomeScreen = () => {
     { id: '3', name: 'Carol', image: 'https://example.com/carol.jpg' },
     // add more profiles as needed
   ]);
+  const { darkModeEnabled } = useTheme();
 
   const renderCard = (card) => (
-    <View style={styles.card}>
+    <View style={[styles.card, darkModeEnabled && styles.darkCard]}>
       <Image style={styles.image} source={{ uri: card.image }} />
-      <Text style={styles.name}>{card.name}</Text>
+      <Text style={[styles.name, darkModeEnabled && styles.darkText]}>{card.name}</Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Discover Profiles</Text>
+    <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>
+      <Text style={[styles.text, darkModeEnabled && styles.darkText]}>Discover Profiles</Text>
       <Swiper
         cards={profiles}
         renderCard={renderCard}
         onSwipedLeft={(cardIndex) => console.log('Swiped left on card:', cardIndex)}
         onSwipedRight={(cardIndex) => console.log('Swiped right on card:', cardIndex)}
         cardIndex={0}
-        backgroundColor={'#f0f0f0'}
+        backgroundColor={darkModeEnabled ? '#121212' : '#f0f0f0'}
         stackSize={3}
         overlayLabels={{
           left: {
@@ -78,6 +80,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 40,
   },
+  darkContainer: {
+    backgroundColor: '#121212',
+  },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -96,6 +101,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  darkCard: {
+    backgroundColor: '#1e1e1e',
+    borderColor: '#333',
+  },
   image: {
     width: '100%',
     height: '80%',
@@ -105,6 +114,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     paddingVertical: 10,
+  },
+  text: {
+    color: '#333',
+  },
+  darkText: {
+    color: '#fff',
   },
 });
 

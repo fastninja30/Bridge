@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
-
+import { useTheme } from '../ThemeContext';
 const MatchesScreen = () => {
   const navigation = useNavigation(); // Initialize navigation
-
+  const { darkModeEnabled } = useTheme();
   // Dummy data for matched profiles
   const matches = [
     {
@@ -65,6 +65,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 16,
+  },
+  darkContainer: {
+    backgroundColor: '#121212',
   },
   title: {
     fontSize: 24,

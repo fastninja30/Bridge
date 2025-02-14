@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, ScrollView } from 'react-native';
+import { useTheme } from '../ThemeContext';
+const SettingsScreen = () => {
 
-const SettingsScreen = ({ navigation }) => {
   // State for toggles
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+  const { darkModeEnabled, toggleDarkMode } = useTheme(); // Get theme state
   const [locationEnabled, setLocationEnabled] = useState(true);
 
   return (
@@ -25,7 +26,7 @@ const SettingsScreen = ({ navigation }) => {
         <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Dark Mode</Text>
         <Switch
           value={darkModeEnabled}
-          onValueChange={setDarkModeEnabled}
+          onValueChange={toggleDarkMode}
           trackColor={{ false: '#767577', true: '#81b0ff' }}
           thumbColor={darkModeEnabled ? '#007bff' : '#f4f3f4'}
         />
