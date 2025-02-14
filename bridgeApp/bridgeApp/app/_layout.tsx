@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -59,7 +58,6 @@ function SettingsStack() {
 // Main App Layout
 export default function AppLayout() {
   return (
-    <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -110,6 +108,5 @@ export default function AppLayout() {
           options={{ title: 'Settings' }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 }
