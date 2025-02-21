@@ -4,9 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { View, StyleSheet } from 'react-native';
 
-
-// Theme Context
+// Theme and Matches Contexts
 import { ThemeProvider, useTheme } from './ThemeContext';
+import { MatchesProvider } from './MatchesContext';
 
 // Screens
 import HomeScreen from './screens/HomeScreen';
@@ -14,13 +14,10 @@ import MatchesScreen from './screens/MatchesScreen';
 import ChatScreen from './screens/ChatScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
-import PrivacySettingsScreen from './screens/PrivacySettingsScreen'; // Add this screen
-import AccountSettingsScreen from './screens/AccountSettingsScreen'; // Add this screen
+import PrivacySettingsScreen from './screens/PrivacySettingsScreen';
+import AccountSettingsScreen from './screens/AccountSettingsScreen';
 
-// Create a bottom tab navigator
 const Tab = createBottomTabNavigator();
-
-// Create a stack navigator for chat and settings
 const Stack = createNativeStackNavigator();
 
 // Chat Stack Navigator
@@ -59,8 +56,10 @@ function SettingsStack() {
     </Stack.Navigator>
   );
 }
+
+// App Navigator using theme settings
 function AppNavigator() {
-  const { darkModeEnabled } = useTheme(); // Get theme state
+  const { darkModeEnabled } = useTheme();
 
   return (
     <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>
@@ -84,7 +83,7 @@ function AppNavigator() {
           tabBarActiveTintColor: '#ff6b6b',
           tabBarInactiveTintColor: 'gray',
           tabBarStyle: {
-            backgroundColor: darkModeEnabled ? '#222' : '#fff', // Change tab bar background
+            backgroundColor: darkModeEnabled ? '#222' : '#fff',
           },
         })}
       >
@@ -97,60 +96,14 @@ function AppNavigator() {
     </View>
   );
 }
-// Main App Layout
+
+// Main App Layout wrapped with Theme and Matches Providers
 export default function AppLayout() {
   return (
     <ThemeProvider>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Matches') {
-              iconName = focused ? 'heart' : 'heart-outline';
-            } else if (route.name === 'Chat') {
-              iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'person' : 'person-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'settings' : 'settings-outline';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: '#ff6b6b', // Custom active tab color
-          tabBarInactiveTintColor: 'gray', // Custom inactive tab color
-          tabBarStyle: { backgroundColor: '#fff' }, // Custom tab bar background
-        })}
-      >
-        <Tab.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ title: 'Discover' }}
-        />
-        <Tab.Screen
-          name="Matches"
-          component={MatchesScreen}
-          options={{ title: 'Matches' }}
-        />
-        <Tab.Screen
-          name="Chat"
-          component={ChatStack}
-          options={{ title: 'Chat' }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ title: 'Profile' }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={SettingsStack}
-          options={{ title: 'Settings' }}
-        />
-      </Tab.Navigator>
+      <MatchesProvider>
+        <AppNavigator />
+      </MatchesProvider>
     </ThemeProvider>
   );
 }

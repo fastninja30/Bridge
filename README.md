@@ -7,6 +7,19 @@
 3. **Set up Git**: Follow the instructions [here](https://docs.github.com/en/get-started/getting-started-with-git/set-up-git) and complete steps 2, 3 and authenticating with GitHub from Git.
 4. Create a new folder for your project. 
 5. In terminal, change directory(cd) to the new folder and type the following: `git clone https://github.com/fastninja30/Bridge.git`
+6. Install npm: 
+```bash
+   npm install
+```
+7. Install npm: 
+```bash
+   npm install shelljs
+```
+8. Start the app
+
+   ```bash
+    node start-bridge.js
+   ```
 
 ## Vision
 Our vision is to develop a dating app that creates meaningful connections between international students attending colleges abroad who may not have English as their first language. We aim to build an inclusive, secure, and user-friendly app that lets users meet like-minded individuals in a trusted environment. We also hope to learn and feel comfortable working with React Native over the course of the semester.
