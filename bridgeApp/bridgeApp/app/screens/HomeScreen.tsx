@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   darkContainer: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1e1e1e',
   },
   header: {
     fontSize: 24,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   darkCard: {
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#2f2f2f',
     borderColor: '#333',
   },
   image: {

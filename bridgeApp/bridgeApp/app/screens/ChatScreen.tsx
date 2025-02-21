@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { useTheme } from '../ThemeContext';
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -11,7 +12,7 @@ const ChatScreen = () => {
     { id: '2', text: 'I’m good, thanks! How about you?', sender: 'me' },
     { id: '3', text: 'Doing great! Want to grab coffee sometime?', sender: 'other' },
   ]);
-
+  const { darkModeEnabled } = useTheme();
   const [inputText, setInputText] = useState('');
 
   // Simulate an async operation (e.g., fetching messages)
@@ -62,7 +63,7 @@ const ChatScreen = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, darkModeEnabled && styles.darkContainer]}
       keyboardVerticalOffset={90}
     >
       <FlatList
@@ -73,9 +74,9 @@ const ChatScreen = () => {
         inverted
       />
 
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, darkModeEnabled && styles.darkInputContainer]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, darkModeEnabled && styles.darkInput]}
           placeholder="Type a message..."
           value={inputText}
           onChangeText={setInputText}
@@ -94,6 +95,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  darkContainer: {
+    backgroundColor: '#1e1e1e'
+  },
   messagesContainer: {
     padding: 16,
   },
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
   },
   otherMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#444',
     borderRadius: 10,
     padding: 10,
     marginBottom: 8,
@@ -125,6 +129,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
   },
+  darkInputContainer: {
+    backgroundColor: '#333'
+  },
   input: {
     flex: 1,
     backgroundColor: '#f0f0f0',
@@ -134,6 +141,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
     fontSize: 16,
     maxHeight: 100,
+  },
+  darkInput: {
+    color: "#eee",
+    backgroundColor: '#1e1e1e'
   },
   sendButton: {
     backgroundColor: '#007bff',

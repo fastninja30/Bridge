@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-
+import { useTheme } from '../ThemeContext';
 const ProfileScreen = () => {
   // Dummy user profile data
+  const { darkModeEnabled } = useTheme();
   const user = {
     name: 'John Doe',
     age: 23,
@@ -15,17 +16,17 @@ const ProfileScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, darkModeEnabled && styles.darkContainer]}>
       {/* Profile Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, darkModeEnabled && styles.darkHeader]}>
         <Image source={{ uri: user.photos[0] }} style={styles.profileImage} />
-        <Text style={styles.name}>{user.name}, {user.age}</Text>
-        <Text style={styles.bio}>{user.bio}</Text>
+        <Text style={[styles.name, darkModeEnabled && styles.darkName]}>{user.name}, {user.age}</Text>
+        <Text style={[styles.bio, darkModeEnabled && styles.darkBio]}>{user.bio}</Text>
       </View>
 
       {/* Photos Section */}
-      <View style={styles.photosSection}>
-        <Text style={styles.sectionTitle}>Photos</Text>
+      <View style={[styles.photosSection, darkModeEnabled && styles.darkPhotosSection]}>
+        <Text style={[styles.sectionTitle, darkModeEnabled && styles.darkSectionTitle]}>Photos</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {user.photos.map((photo, index) => (
             <Image key={index} source={{ uri: photo }} style={styles.photo} />
@@ -46,12 +47,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  darkContainer: {
+    backgroundColor: '#1e1e1e'
+  },
   header: {
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+  },
+  darkHeader: {
+    backgroundColor: '#333',
+    borderBottomColor: '#555'
   },
   profileImage: {
     width: 120,
@@ -64,22 +72,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  darkName: {
+    color: '#fff'
+  },
   bio: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
     marginTop: 8,
   },
+  darkBio: {
+    color: '#eee'
+  },
   photosSection: {
     padding: 16,
     backgroundColor: '#fff',
     marginTop: 16,
+  },
+  darkPhotosSection: {
+    backgroundColor: '#333'
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
     marginBottom: 12,
+  },
+  darkSectionTitle: {
+    color: '#fff'
   },
   photo: {
     width: 150,
