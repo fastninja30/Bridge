@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { useTheme } from '../ThemeContext';
+import { useMatches } from '../MatchesContext';
 
 const HomeScreen = () => {
   const [profiles, setProfiles] = useState([
@@ -11,22 +12,33 @@ const HomeScreen = () => {
     // add more profiles as needed
   ]);
   const { darkModeEnabled } = useTheme();
+  const { addMatch } = useMatches();
 
   const renderCard = (card) => (
     <View style={[styles.card, darkModeEnabled && styles.darkCard]}>
       <Image style={styles.image} source={{ uri: card.image }} />
-      <Text style={[styles.name, darkModeEnabled && styles.darkText]}>{card.name}</Text>
+      <Text style={[styles.name, darkModeEnabled && styles.darkText]}>
+        {card.name}
+      </Text>
     </View>
   );
 
   return (
     <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>
-      <Text style={[styles.text, darkModeEnabled && styles.darkText]}>Discover Profiles</Text>
+      <Text style={[styles.text, darkModeEnabled && styles.darkText]}>
+        Discover Profiles
+      </Text>
       <Swiper
         cards={profiles}
         renderCard={renderCard}
-        onSwipedLeft={(cardIndex) => console.log('Swiped left on card:', cardIndex)}
-        onSwipedRight={(cardIndex) => console.log('Swiped right on card:', cardIndex)}
+        onSwipedLeft={(cardIndex) =>
+          console.log('Swiped left on card:', cardIndex)
+        }
+        onSwipedRight={(cardIndex) => {
+          console.log('Swiped right on card:', cardIndex);
+          const likedProfile = profiles[cardIndex];
+          addMatch(likedProfile);
+        }}
         cardIndex={0}
         backgroundColor={darkModeEnabled ? '#121212' : '#f0f0f0'}
         stackSize={3}
@@ -81,7 +93,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   darkContainer: {
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#121212',
   },
   header: {
     fontSize: 24,
@@ -102,7 +114,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   darkCard: {
-    backgroundColor: '#2f2f2f',
+    backgroundColor: '#1e1e1e',
     borderColor: '#333',
   },
   image: {
