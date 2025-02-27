@@ -11,7 +11,7 @@ const MatchesScreen = () => {
 
   // Render each matched profile
   const renderMatch = ({ item }) => (
-    <View style={styles.matchCard}>
+    <View style={[styles.matchCard, darkModeEnabled && styles.darkMatchCard]}>
       <Image source={{ uri: item.image }} style={styles.profileImage} />
       <View style={styles.profileInfo}>
         <Text style={[styles.name, darkModeEnabled && styles.darkText]}>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   darkContainer: {
-    backgroundColor: '#121212',
+    backgroundColor: '#1e1e1e',
   },
   title: {
     fontSize: 24,
@@ -81,6 +81,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  darkMatchCard: {
+    backgroundColor: '#2f2f2f'
   },
   profileImage: {
     width: 60,

@@ -22,8 +22,14 @@ const Stack = createNativeStackNavigator();
 
 // Chat Stack Navigator
 function ChatStack() {
+  const { darkModeEnabled } = useTheme();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: darkModeEnabled ? '#1e1e1e' : '#fff' },
+        headerTintColor: darkModeEnabled ? '#fff' : '#000',
+      }}
+    >
       <Stack.Screen
         name="ChatList"
         component={ChatScreen}
@@ -41,7 +47,7 @@ function SettingsStack() {
       <Stack.Screen
         name="SettingsMain"
         component={SettingsScreen}
-        options={{ title: 'Settings' }}
+        options={{ title: 'Settings', headerShown: false }}
       />
       <Stack.Screen
         name="PrivacySettings"
@@ -65,6 +71,8 @@ function AppNavigator() {
     <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
+          headerStyle: { backgroundColor: darkModeEnabled ? '#1e1e1e' : '#fff' },
+          headerTintColor: darkModeEnabled ? '#fff' : '#000',
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             if (route.name === 'Home') {

@@ -29,6 +29,7 @@ const HomeScreen = () => {
         Discover Profiles
       </Text>
       <Swiper
+        key={darkModeEnabled ? 'dark' : 'light'}
         cards={profiles}
         renderCard={renderCard}
         onSwipedLeft={(cardIndex) =>
