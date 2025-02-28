@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { useTheme } from '../ThemeContext';
 import { useMatches } from '../MatchesContext';
+import { Colors } from '../constants/colors';
 
 const HomeScreen = () => {
   const [profiles, setProfiles] = useState([
@@ -13,19 +14,19 @@ const HomeScreen = () => {
   ]);
   const { darkModeEnabled } = useTheme();
   const { addMatch } = useMatches();
-
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
   const renderCard = (card) => (
-    <View style={[styles.card, darkModeEnabled && styles.darkCard]}>
+    <View style={[styles.card, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
       <Image style={styles.image} source={{ uri: card.image }} />
-      <Text style={[styles.name, darkModeEnabled && styles.darkText]}>
+      <Text style={[styles.name, { color: themeColors.text }]}>
         {card.name}
       </Text>
     </View>
   );
 
   return (
-    <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>
-      <Text style={[styles.text, darkModeEnabled && styles.darkText]}>
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Text style={[styles.text, { color: themeColors.text }]}>
         Discover Profiles
       </Text>
       <Swiper
@@ -89,34 +90,19 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
     alignItems: 'center',
     paddingTop: 40,
-  },
-  darkContainer: {
-    backgroundColor: '#121212',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
   },
   card: {
     flex: 0.75,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#e8e8e8',
-    backgroundColor: '#fff',
     overflow: 'hidden',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  darkCard: {
-    backgroundColor: '#1e1e1e',
-    borderColor: '#333',
   },
   image: {
     width: '100%',
@@ -129,11 +115,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   text: {
-    color: '#333',
-  },
-  darkText: {
-    color: '#fff',
+    fontSize: 18,
   },
 });
-
 export default HomeScreen;

@@ -4,6 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { View, StyleSheet } from 'react-native';
 
+// Import the Colors constants file
+import { Colors } from './constants/colors';
+
 // Theme and Matches Contexts
 import { ThemeProvider, useTheme } from './ThemeContext';
 import { MatchesProvider } from './MatchesContext';
@@ -22,18 +25,26 @@ const Stack = createNativeStackNavigator();
 
 // Chat Stack Navigator
 function ChatStack() {
-  const { darkModeEnabled } = useTheme();
+  const { darkModeEnabled } = useTheme(); 
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
+
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: darkModeEnabled ? '#1e1e1e' : '#fff' },
-        headerTintColor: darkModeEnabled ? '#fff' : '#000',
+        headerStyle: {
+          backgroundColor: '#000',    // or your dark color
+          borderBottomWidth: 0,      // remove any manual border
+          elevation: 0,              // remove Android shadow
+          shadowOpacity: 0,          // remove iOS shadow
+        },
+        headerShadowVisible: false,
+        headerTintColor: themeColors.text,
       }}
     >
       <Stack.Screen
         name="ChatList"
         component={ChatScreen}
-        options={{ title: 'Chats' }}
+        options={{ title: 'Chats' , headerShown: false }}
       />
       {/* Add more chat-related screens here if needed */}
     </Stack.Navigator>
@@ -63,16 +74,17 @@ function SettingsStack() {
   );
 }
 
-// App Navigator using theme settings
+// App Navigator using theme settings and Colors constants
 function AppNavigator() {
   const { darkModeEnabled } = useTheme();
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
 
   return (
-    <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>
+    <View style={[styles.container, { backgroundColor: themeColors.container }]}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerStyle: { backgroundColor: darkModeEnabled ? '#1e1e1e' : '#fff' },
-          headerTintColor: darkModeEnabled ? '#fff' : '#000',
+          headerStyle: { backgroundColor: themeColors.tabBackground },
+          headerTintColor: themeColors.text,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             if (route.name === 'Home') {
@@ -88,18 +100,20 @@ function AppNavigator() {
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#ff6b6b',
-          tabBarInactiveTintColor: 'gray',
+          tabBarActiveTintColor: themeColors.activeTint,
+          tabBarInactiveTintColor: themeColors.inactiveTint,
           tabBarStyle: {
-            backgroundColor: darkModeEnabled ? '#222' : '#fff',
+            backgroundColor: themeColors.tabBackground,
+            borderTopColor: themeColors.tabBorder,
+            borderTopWidth: 0,
           },
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Discover' }} />
-        <Tab.Screen name="Matches" component={MatchesScreen} options={{ title: 'Matches' }} />
-        <Tab.Screen name="Chat" component={ChatStack} options={{ title: 'Chat' }} />
-        <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
-        <Tab.Screen name="Settings" component={SettingsStack} options={{ title: 'Settings' }} />
+        <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Discover' , headerShadowVisible: false}} />
+        <Tab.Screen name="Matches" component={MatchesScreen} options={{ title: 'Matches' , headerShadowVisible: false}} />
+        <Tab.Screen name="Chat" component={ChatStack} options={{ title: 'Chat' , headerShadowVisible: false}} />
+        <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' , headerShadowVisible: false}} />
+        <Tab.Screen name="Settings" component={SettingsStack} options={{ title: 'Settings' , headerShadowVisible: false}} />
       </Tab.Navigator>
     </View>
   );
@@ -119,9 +133,5 @@ export default function AppLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  darkContainer: {
-    backgroundColor: '#121212',
   },
 });
