@@ -3,21 +3,22 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../ThemeContext';
 import { useMatches } from '../MatchesContext';
+import { Colors } from '../constants/colors';
 
 const MatchesScreen = () => {
   const navigation = useNavigation();
   const { darkModeEnabled } = useTheme();
   const { matches } = useMatches();
-
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
   // Render each matched profile
   const renderMatch = ({ item }) => (
-    <View style={[styles.matchCard, darkModeEnabled && styles.darkMatchCard]}>
+    <View style={[styles.matchCard, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
       <Image source={{ uri: item.image }} style={styles.profileImage} />
       <View style={styles.profileInfo}>
-        <Text style={[styles.name, darkModeEnabled && styles.darkText]}>
+        <Text style={[styles.name, { color: themeColors.text }]}>
           {item.name}
         </Text>
-        <Text style={[styles.bio, darkModeEnabled && styles.darkText]}>
+        <Text style={[styles.bio, { color: themeColors.text }]}>
           {item.bio}
         </Text>
       </View>
@@ -31,12 +32,12 @@ const MatchesScreen = () => {
   );
 
   return (
-    <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>
-      <Text style={[styles.title, darkModeEnabled && styles.darkText]}>
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Text style={[styles.title, { color: themeColors.text }]}>
         Your Matches
       </Text>
       {matches.length === 0 ? (
-        <Text style={[styles.noMatches, darkModeEnabled && styles.darkText]}>
+        <Text style={[styles.noMatches, { color: themeColors.text }]}>
           No matches yet
         </Text>
       ) : (
@@ -54,11 +55,7 @@ const MatchesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
     padding: 16,
-  },
-  darkContainer: {
-    backgroundColor: '#1e1e1e',
   },
   title: {
     fontSize: 24,
@@ -72,7 +69,6 @@ const styles = StyleSheet.create({
   matchCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 16,
     marginBottom: 12,
@@ -81,9 +77,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-  },
-  darkMatchCard: {
-    backgroundColor: '#2f2f2f'
   },
   profileImage: {
     width: 60,
@@ -119,9 +112,6 @@ const styles = StyleSheet.create({
   chatButtonText: {
     color: '#fff',
     fontWeight: '600',
-  },
-  darkText: {
-    color: '#fff',
   },
 });
 

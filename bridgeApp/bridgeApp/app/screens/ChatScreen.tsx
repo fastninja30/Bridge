@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useTheme } from '../ThemeContext';
+import { Colors } from '../constants/colors';
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -14,6 +15,7 @@ const ChatScreen = () => {
   ]);
   const { darkModeEnabled } = useTheme();
   const [inputText, setInputText] = useState('');
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
 
   // Simulate an async operation (e.g., fetching messages)
   useEffect(() => {
@@ -63,7 +65,7 @@ const ChatScreen = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={[styles.container, darkModeEnabled && styles.darkContainer]}
+      style={[styles.container, { backgroundColor: themeColors.background }]}
       keyboardVerticalOffset={90}
     >
       <FlatList
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 8,
     backgroundColor: '#fff',
-    borderTopWidth: 1,
+    borderTopWidth: 0,
     borderTopColor: '#e0e0e0',
   },
   darkInputContainer: {

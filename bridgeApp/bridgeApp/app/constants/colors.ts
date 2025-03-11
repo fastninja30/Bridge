@@ -13,10 +13,10 @@ export const Colors = {
     dark: {
       background: '#121212',
       container: '#121212',
-      cardBackground: '#1e1e1e',
+      cardBackground: '#242424',
       cardBorder: '#333',
       text: '#fff',
-      tabBackground: '#222',
+      tabBackground: '#1e1e1e',
       tabBorder: '#121212',
       activeTint: '#ff6b6b',
       inactiveTint: 'gray',

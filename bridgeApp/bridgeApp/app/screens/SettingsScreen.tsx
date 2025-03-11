@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, ScrollView } from 'react-native';
 import { useTheme } from '../ThemeContext';
+import { Colors } from "../constants/colors";
+
 const SettingsScreen = () => {
 
   // State for toggles
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const { darkModeEnabled, toggleDarkMode } = useTheme(); // Get theme state
   const [locationEnabled, setLocationEnabled] = useState(true);
-
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
   return (
-    <ScrollView style={[styles.container, darkModeEnabled && styles.darkContainer]}>
+    <ScrollView style={[styles.container, { backgroundColor: themeColors.background }]}>
       {/* Notification Settings */}
-      <View style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}>
-        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Enable Notifications</Text>
+      <View style={[styles.settingItem, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
+        <Text style={[styles.settingText, { color: themeColors.text }]}>Enable Notifications</Text>
         <Switch
           value={notificationsEnabled}
           onValueChange={setNotificationsEnabled}
@@ -22,8 +24,8 @@ const SettingsScreen = () => {
       </View>
 
       {/* Dark Mode Settings */}
-      <View style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}>
-        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Dark Mode</Text>
+      <View style={[styles.settingItem, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
+        <Text style={[styles.settingText, { color: themeColors.text }]}>Dark Mode</Text>
         <Switch
           value={darkModeEnabled}
           onValueChange={toggleDarkMode}
@@ -33,8 +35,8 @@ const SettingsScreen = () => {
       </View>
 
       {/* Location Settings */}
-      <View style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}>
-        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Enable Location</Text>
+      <View style={[styles.settingItem, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
+        <Text style={[styles.settingText, { color: themeColors.text }]}>Enable Location</Text>
         <Switch
           value={locationEnabled}
           onValueChange={setLocationEnabled}
@@ -45,20 +47,20 @@ const SettingsScreen = () => {
 
       {/* Privacy Settings */}
       <TouchableOpacity
-        style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}
+        style={[styles.settingItem, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}
         onPress={() => navigation.navigate('PrivacySettings')}
       >
-        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Privacy Settings</Text>
-        <Text style={[styles.arrow, darkModeEnabled && styles.darkText]}>→</Text>
+        <Text style={[styles.settingText, { color: themeColors.text }]}>Privacy Settings</Text>
+        <Text style={[styles.arrow, { color: themeColors.text }]}>→</Text>
       </TouchableOpacity>
 
       {/* Account Settings */}
       <TouchableOpacity
-        style={[styles.settingItem, darkModeEnabled && styles.darkSettingItem]}
+        style={[styles.settingItem, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}
         onPress={() => navigation.navigate('AccountSettings')}
       >
-        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>Account Settings</Text>
-        <Text style={[styles.arrow, darkModeEnabled && styles.darkText]}>→</Text>
+        <Text style={[styles.settingText, { color: themeColors.text }]}>Account Settings</Text>
+        <Text style={[styles.arrow, { color: themeColors.text }]}>→</Text>
       </TouchableOpacity>
 
       {/* Logout Button */}
@@ -80,9 +82,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     padding: 16,
   },
-  darkContainer: {
-    backgroundColor: '#1e1e1e',
-  },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -97,15 +96,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  darkSettingItem: {
-    backgroundColor: '#2f2f2f',
-  },
   settingText: {
     fontSize: 16,
     color: '#333',
-  },
-  darkText: {
-    color: '#fff',
   },
   arrow: {
     fontSize: 18,

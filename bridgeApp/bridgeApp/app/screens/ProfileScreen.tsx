@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../ThemeContext';
+import { Colors } from '../constants/colors';
 const ProfileScreen = () => {
   // Dummy user profile data
   const { darkModeEnabled } = useTheme();
@@ -14,18 +15,18 @@ const ProfileScreen = () => {
       'https://via.placeholder.com/300',
     ],
   };
-
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
   return (
-    <ScrollView style={[styles.container, darkModeEnabled && styles.darkContainer]}>
+    <ScrollView style={[styles.container, { backgroundColor: themeColors.background }]}>
       {/* Profile Header */}
-      <View style={[styles.header, darkModeEnabled && styles.darkHeader]}>
+      <View style={[styles.header, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
         <Image source={{ uri: user.photos[0] }} style={styles.profileImage} />
         <Text style={[styles.name, darkModeEnabled && styles.darkName]}>{user.name}, {user.age}</Text>
         <Text style={[styles.bio, darkModeEnabled && styles.darkBio]}>{user.bio}</Text>
       </View>
 
       {/* Photos Section */}
-      <View style={[styles.photosSection, darkModeEnabled && styles.darkPhotosSection]}>
+      <View style={[styles.photosSection, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
         <Text style={[styles.sectionTitle, darkModeEnabled && styles.darkSectionTitle]}>Photos</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {user.photos.map((photo, index) => (
