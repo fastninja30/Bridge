@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-native-deck-swiper": "^2.0.17",
+    "shelljs": "^0.8.5"
+  }
+}
