@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from firebase_config import db, auth_client
 
 app = FastAPI()
 
@@ -7,9 +8,9 @@ def read_root():
     return {"message": "Hello, World!"}
 
 
-"""
-1. Cd to backend folder
-2. docker run -p 8000:8000 bridge-backend
-3. http://127.0.0.1:8000/
-4. http://127.0.0.1:8000/docs
-"""
+@app.get("/users")
+def get_users():
+    # Example: Fetching users from Firestore
+    users_ref = db.collection("users")
+    users = [doc.to_dict() for doc in users_ref.stream()]
+    return {"users": users}
