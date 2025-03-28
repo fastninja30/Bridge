@@ -1,12 +1,13 @@
 // LoginScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
   Login: undefined;
-  Home: undefined; // or any other screen you navigate to after login
+  Home: undefined; 
+  SignUp: undefined;
 };
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
@@ -53,6 +54,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         style={styles.input}
       />
       <Button title="Login" onPress={handleLogin} />
+        {/* Navigation to Sign Up */}
+        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+            <Text style={styles.signUpText}>Don't have an account? Sign Up</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -74,6 +79,11 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     borderRadius: 4,
+  },
+  signUpText: {
+    marginTop: 16,
+    textAlign: 'center',
+    color: 'blue',
   },
 });
 
