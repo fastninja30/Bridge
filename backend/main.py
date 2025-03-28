@@ -1,7 +1,5 @@
 from fastapi import FastAPI
 from firebase_config import db, auth_client
-from fastapi.middleware.cors import CORSMiddleware
-from . import user_routes
 
 app = FastAPI()
 
@@ -22,10 +20,26 @@ app.include_router(user_routes.router)
 def read_root():
     return {"message": "Hello, World!"}
 
-
 @app.get("/users")
 def get_users():
-    # Example: Fetching users from Firestore
     users_ref = db.collection("users")
     users = [doc.to_dict() for doc in users_ref.stream()]
     return {"users": users}
+
+@app.post("/signup")
+def sign_up(user: UserSignUp):
+    try:
+        # Create a new user using Firebase Authentication.
+        firebase_user = auth_client.create_user(
+            email=user.email,
+            password=user.password,
+        )
+        # Optionally, create a corresponding Firestore document with additional user details.
+        db.collection("users").document(firebase_user.uid).set({
+            "email": user.email,
+            # You can add other default fields here if needed.
+        })
+        return {"message": "User created successfully", "uid": firebase_user.uid}
+    except Exception as e:
+        # You might want to log the error or handle specific exceptions.
+        raise HTTPException(status_code=400, detail=str(e))
