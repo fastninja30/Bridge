@@ -19,10 +19,12 @@ import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import PrivacySettingsScreen from './screens/PrivacySettingsScreen';
 import AccountSettingsScreen from './screens/AccountSettingsScreen';
+import SignUpScreen from './screens/SignUpScreen';
+import LoginScreen from './screens/LoginScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
+const RootStack = createNativeStackNavigator();
 // Chat Stack Navigator
 function ChatStack() {
   const { darkModeEnabled } = useTheme(); 
@@ -116,6 +118,44 @@ function AppNavigator() {
         <Tab.Screen name="Settings" component={SettingsStack} options={{ title: 'Settings' , headerShadowVisible: false}} />
       </Tab.Navigator>
     </View>
+  );
+}
+// Authentication Stack Navigator
+function AuthStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="Login" 
+        component={LoginScreen} 
+        options={{ headerShown: false }} 
+      />
+      <Stack.Screen 
+        name="SignUp" 
+        component={SignUpScreen} 
+        options={{ headerShown: false }} 
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Root Navigator that combines Auth and Main App flows
+// In a real app, you’d conditionally show either AuthStack or AppNavigator based on auth state.
+function RootNavigator() {
+  return (
+    <RootStack.Navigator initialRouteName="Login">
+      {/* Auth screens */}
+      <RootStack.Screen 
+        name="Auth" 
+        component={AuthStack} 
+        options={{ headerShown: false }} 
+      />
+      {/* Main app screens */}
+      <RootStack.Screen 
+        name="Main" 
+        component={AppNavigator} 
+        options={{ headerShown: false }} 
+      />
+    </RootStack.Navigator>
   );
 }
 
