@@ -123,7 +123,7 @@ function AppNavigator() {
 // Authentication Stack Navigator
 function AuthStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='Login'>
       <Stack.Screen 
         name="Login" 
         component={LoginScreen} 
@@ -142,7 +142,7 @@ function AuthStack() {
 // In a real app, you’d conditionally show either AuthStack or AppNavigator based on auth state.
 function RootNavigator() {
   return (
-    <RootStack.Navigator initialRouteName="Login">
+    <RootStack.Navigator initialRouteName="Auth">
       {/* Auth screens */}
       <RootStack.Screen 
         name="Auth" 
@@ -164,7 +164,7 @@ export default function AppLayout() {
   return (
     <ThemeProvider>
       <MatchesProvider>
-        <AppNavigator />
+        <RootNavigator />
       </MatchesProvider>
     </ThemeProvider>
   );
