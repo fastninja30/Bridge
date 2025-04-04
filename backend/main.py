@@ -1,10 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from firebase_config import db, auth_client
+from user_routes import router as user_router  # Import the router you defined
 
 app = FastAPI()
 
-# Allow requests from your React Native frontend
-origins = ["*"]  # Change "*" to your actual frontend domain in production
+# Configure CORS (for your React Native frontend)
+origins = ["*"]  # Update this in production
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -13,8 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include your user routes (e.g., /register, /login)
-app.include_router(user_routes.router)
+# Include the user routes (signup, login, etc.)
+app.include_router(user_router)
 
 @app.get("/")
 def read_root():
@@ -25,21 +27,3 @@ def get_users():
     users_ref = db.collection("users")
     users = [doc.to_dict() for doc in users_ref.stream()]
     return {"users": users}
-
-@app.post("/signup")
-def sign_up(user: UserSignUp):
-    try:
-        # Create a new user using Firebase Authentication.
-        firebase_user = auth_client.create_user(
-            email=user.email,
-            password=user.password,
-        )
-        # Optionally, create a corresponding Firestore document with additional user details.
-        db.collection("users").document(firebase_user.uid).set({
-            "email": user.email,
-            # You can add other default fields here if needed.
-        })
-        return {"message": "User created successfully", "uid": firebase_user.uid}
-    except Exception as e:
-        # You might want to log the error or handle specific exceptions.
-        raise HTTPException(status_code=400, detail=str(e))

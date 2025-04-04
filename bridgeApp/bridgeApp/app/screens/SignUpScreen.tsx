@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -28,7 +28,7 @@ type RootStackParamList = {
   
       try {
         // Update the URL to your FastAPI backend
-        const response = await axios.post('http://YOUR_BACKEND_URL/signup', { email, password });
+        const response = await axios.post('http://10.0.2.2:8000/signup', { email, password }); // Usually is http://127.0.0.1:8000/signup
         Alert.alert('Success', 'User created successfully!');
         // Navigate to the login or home screen
         navigation.navigate('Login');
