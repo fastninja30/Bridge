@@ -1,6 +1,5 @@
-// SignUpScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../ThemeContext';
@@ -32,7 +31,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
 
     try {
       // Update the URL to your FastAPI backend
-      await axios.post('http://YOUR_BACKEND_URL/signup', { email, password });
+      await axios.post('http://10.0.2.2:8000/signup', { email, password });
       Alert.alert('Success', 'User created successfully!');
       // Navigate to the login screen after signup
       navigation.navigate('Login');

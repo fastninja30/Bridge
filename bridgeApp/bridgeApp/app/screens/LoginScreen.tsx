@@ -27,9 +27,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       // Update the URL to your FastAPI backend
-      await axios.post('http://YOUR_BACKEND_URL/login', { email, password });
+      const response = await axios.post('http://10.0.2.2:8000/login', { email, password });
       Alert.alert('Success', 'Logged in successfully!');
-      navigation.navigate('HomeScreen'); // Navigate to Home screen
+      // Navigate to the home screen (or another screen as needed)
+      navigation.navigate('Main');
     } catch (error: any) {
       console.error(error);
       const errorMsg =
