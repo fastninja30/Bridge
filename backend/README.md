@@ -22,7 +22,7 @@ and activate it (powershell):
 
 3. Visit http://127.0.0.1:8000/ and http://127.0.0.1:8000/docs
 
-# Atlernatively, to test backend locally#
+# Atlernatively, to test backend locally #
 1. Install and use uvicorn instead:
 ```bash
    uvicorn main:app --reload

@@ -62,7 +62,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       <TouchableOpacity style={[styles.loginButton, { backgroundColor: '#ff6b6b' }]} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
         <Text style={[styles.signUpText, { color: themeColors.text }]}>
           Don't have an account? Sign Up
         </Text>
