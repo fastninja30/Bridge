@@ -82,7 +82,17 @@ function SettingsStack() {
       <Stack.Screen
         name="AccountSettings"
         component={AccountSettingsScreen}
-        options={{ title: 'Account Settings' }}
+        options={{
+          title: 'Account Settings',
+          headerStyle: {
+            backgroundColor: themeColors.tabBackground,
+            // optional: remove shadow to match your other headers
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerTintColor: themeColors.text,
+        }}
       />
     </Stack.Navigator>
   );
