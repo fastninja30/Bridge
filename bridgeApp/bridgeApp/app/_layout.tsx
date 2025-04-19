@@ -55,6 +55,8 @@ function ChatStack() {
 
 // Settings Stack Navigator
 function SettingsStack() {
+  const { darkModeEnabled } = useTheme(); 
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -65,7 +67,17 @@ function SettingsStack() {
       <Stack.Screen
         name="PrivacySettings"
         component={PrivacySettingsScreen}
-        options={{ title: 'Privacy Settings' }}
+        options={{
+          title: 'Privacy Settings',
+          headerStyle: {
+            backgroundColor: themeColors.tabBackground,
+            // optional: remove shadow to match your other headers
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerTintColor: themeColors.text,
+        }}
       />
       <Stack.Screen
         name="AccountSettings"
@@ -107,7 +119,6 @@ function AppNavigator() {
           tabBarStyle: {
             backgroundColor: themeColors.tabBackground,
             borderTopColor: themeColors.tabBorder,
-            borderTopWidth: 0,
           },
         })}
       >
@@ -120,6 +131,8 @@ function AppNavigator() {
     </View>
   );
 }
+
+
 // Authentication Stack Navigator
 function AuthStack() {
   return (

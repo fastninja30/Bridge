@@ -15,10 +15,9 @@ type AuthStackParamList = {
   SignUp: undefined;
 };
 
-type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Login'>;
 
 type Props = {
-  navigation: LoginScreenNavigationProp;
+  navigation: StackNavigationProp<AuthStackParamList, 'Login'>;
 };
 
 const { width } = Dimensions.get('window');
@@ -31,10 +30,11 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
+      navigation.replace('Main' as any);
       await axios.post('http://10.0.2.2:8000/login', { email, password });
       Alert.alert('Success', 'Logged in successfully!');
       // replace the Auth stack with Main stack
-      navigation.replace('Main' as any);
+      
     } catch (error: any) {
       console.error(error);
       const errorMsg =

@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, ScrollView } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../ThemeContext';
 import { Colors } from "../constants/colors";
 
-const SettingsScreen = () => {
+type SettingsStackParamList = {
+  SettingsMain: undefined;
+  PrivacySettings: undefined;
+  AccountSettings: undefined;
+}
+
+type Props = {
+  navigation: StackNavigationProp<SettingsStackParamList, 'SettingsMain'>;
+}
+const SettingsScreen: React.FC<Props> = ({ navigation }) => {
 
   // State for toggles
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
