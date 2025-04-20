@@ -21,6 +21,7 @@ import PrivacySettingsScreen from './screens/PrivacySettingsScreen';
 import AccountSettingsScreen from './screens/AccountSettingsScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
+import AccountDetailsScreen from './screens/AccountDetails';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -97,6 +98,35 @@ function SettingsStack() {
     </Stack.Navigator>
   );
 }
+// Account Stack Navigator
+function AccountStack() {
+  const { darkModeEnabled } = useTheme(); 
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="AccountSetting"
+        component={SettingsScreen}
+        options={{ title: 'AccountSettings', headerShown: false }}
+      />
+      <Stack.Screen
+        name="AccountDetails"
+        component={AccountDetailsScreen}
+        options={{
+          title: 'Account Details Settings',
+          headerStyle: {
+            backgroundColor: themeColors.tabBackground,
+            // optional: remove shadow to match your other headers
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerTintColor: themeColors.text,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
 // App Navigator using theme settings and Colors constants
 function AppNavigator() {
@@ -137,6 +167,7 @@ function AppNavigator() {
         <Tab.Screen name="Chat" component={ChatStack} options={{ title: 'Chat' , headerShadowVisible: false}} />
         <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' , headerShadowVisible: false}} />
         <Tab.Screen name="Settings" component={SettingsStack} options={{ title: 'Settings' , headerShadowVisible: false}} />
+        <Tab.Screen name="Account" component={AccountStack} options={{ title: 'Account' , headerShadowVisible: false}} />
       </Tab.Navigator>
     </View>
   );
