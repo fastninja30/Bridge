@@ -5,6 +5,11 @@ import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../ThemeContext';
 import { Colors } from '../constants/colors';
+import {
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+} from 'firebase/auth';
+import { auth } from '../../firebaseConfig';
 
 type RootStackParamList = {
   Auth: undefined;
@@ -13,8 +18,8 @@ type RootStackParamList = {
 type AuthStackParamList = {
   Login: undefined;
   SignUp: undefined;
+  EmailVerificationNotice: undefined;
 };
-
 
 type Props = {
   navigation: StackNavigationProp<AuthStackParamList, 'Login'>;
@@ -30,16 +35,54 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        Alert.alert(
+          'Email Not Verified',
+          'Please verify your email address before logging in.'
+        );
+        await sendEmailVerification(user);
+        navigation.navigate('EmailVerificationNotice');
+        return;
+      }
+
+      // 3) Email verified → navigate to Main stack
       navigation.replace('Main' as any);
+  
+      /*
       await axios.post('http://10.0.2.2:8000/login', { email, password });
       Alert.alert('Success', 'Logged in successfully!');
-      // replace the Auth stack with Main stack
+      */
       
     } catch (error: any) {
+      console.error('Login error:', error);
+      let message = 'An error occurred during login';
+
+      if (error.code === 'auth/user-not-found') {
+        message = 'No account found with that email.';
+      } else if (error.code === 'auth/wrong-password') {
+        message = 'Incorrect password.';
+      } else if (error.code === 'auth/invalid-email') {
+        message = 'Invalid email address.';
+      } else if (error.code === 'auth/user-disabled') {
+        message = 'This user account has been disabled.';
+      } else if (error.message) {
+        message = error.message;
+      }
+
+      Alert.alert('Login Failed', message);
+      /*
       console.error(error);
       const errorMsg =
         error.response?.data?.detail || error.message || 'An error occurred during login';
       Alert.alert('Login Failed', errorMsg);
+      */
     }
   };
 
