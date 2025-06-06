@@ -21,6 +21,7 @@ import PrivacySettingsScreen from './screens/PrivacySettingsScreen';
 import AccountSettingsScreen from './screens/AccountSettingsScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
+import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -155,6 +156,11 @@ function AuthStack() {
       <Stack.Screen 
         name="SignUp" 
         component={SignUpScreen} 
+        options={{ headerShown: false }} 
+      />
+      <Stack.Screen 
+        name="ForgetPassword" 
+        component={ForgetPasswordScreen} 
         options={{ headerShown: false }} 
       />
     </Stack.Navigator>
