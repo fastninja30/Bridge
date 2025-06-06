@@ -14,7 +14,7 @@
 ```bash
    npm install
 ```
-7. Install npm: 
+7. Install shelljs for step 8: 
 ```bash
    npm install shelljs
 ```
