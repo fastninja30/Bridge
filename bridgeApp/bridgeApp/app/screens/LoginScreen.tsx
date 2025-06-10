@@ -13,6 +13,7 @@ type RootStackParamList = {
 type AuthStackParamList = {
   Login: undefined;
   SignUp: undefined;
+  ForgetPassword: undefined;
 };
 
 
@@ -74,6 +75,12 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
+          <Text style={[styles.forgotText, { color: themeColors.text }]}>
+            Forgot Password?
+          </Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
           <Text style={[styles.signUpText, { color: themeColors.text }]}>
             Don't have an account? Sign Up
@@ -128,6 +135,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: 16,
+  },
+  forgotText: {
+    fontSize: 14,
+    marginBottom: 12,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
   },
   signUpText: {
     textAlign: 'center',

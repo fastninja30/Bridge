@@ -45,10 +45,41 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  return (
-    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
-      <View style={[styles.card, { backgroundColor: themeColors.cardBackground }]}>
-        <Text style={[styles.header, { color: themeColors.text }]}>Sign Up</Text>
+
+  type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
+
+  type Props = {
+    navigation: SignUpScreenNavigationProp;
+  };
+  
+  const SignUpScreen: React.FC<Props> = ({ navigation }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+  
+    const handleSignUp = async () => {
+      if (password !== confirmPassword) {
+        Alert.alert('Error', 'Passwords do not match');
+        return;
+      }
+  
+      try {
+        // Update the URL to your FastAPI backend
+        const response = await axios.post('http://127.0.0.1:8000/signup', { email, password });
+        Alert.alert('Success', 'User created successfully!');
+        // Navigate to the login or home screen
+        navigation.navigate('Login');
+      } catch (error: any) {
+        console.error(error);
+        const errorMsg =
+          error.response?.data?.detail || error.message || 'An error occurred during sign up';
+        Alert.alert('Sign Up Failed', errorMsg);
+      }
+    };
+  
+    return (
+      <View style={styles.container}>
+        <Text style={styles.header}>Sign Up</Text>
         <TextInput
           placeholder="Email"
           placeholderTextColor={themeColors.text}

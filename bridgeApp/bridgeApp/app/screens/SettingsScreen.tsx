@@ -77,8 +77,13 @@ const SettingsScreen: React.FC<Props> = ({ navigation }) => {
       <TouchableOpacity
         style={styles.logoutButton}
         onPress={() => {
+          navigation.getParent()?.getParent()?.reset({
+            index: 0,
+            routes: [{ name: 'Auth' }], 
+          });
           console.log('User logged out');
         }}
+        
       >
         <Text style={styles.logoutButtonText}>Log Out</Text>
       </TouchableOpacity>
