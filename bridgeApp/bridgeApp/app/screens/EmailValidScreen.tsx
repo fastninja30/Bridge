@@ -1,0 +1,133 @@
+// ForgotPasswordScreen.tsx
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import axios from 'axios';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useTheme } from '../ThemeContext';
+import { Colors } from '../constants/colors';
+
+type AuthStackParamList = {
+  Login: undefined;
+  SignUp: undefined;
+  Email: undefined;
+};
+
+type Props = {
+  navigation: StackNavigationProp<AuthStackParamList, 'Email'>;
+};
+
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.6;
+
+const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
+  const { darkModeEnabled } = useTheme();
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
+  const [email, setEmail] = useState('');
+
+  //const resendEmail TODO: create resend email function
+  const emailValid = async () => {
+    try {
+      // Adjust this endpoint to whatever your backend expects
+      await axios.post('http://10.0.2.2:8000/email-valid', { email });
+
+      Alert.alert(""
+      );
+      navigation.navigate("Login");
+    } catch (error: any) {
+      console.error(error);
+      const errorMsg =
+        error.response?.data?.detail || error.message || 'An error occurred';
+      Alert.alert('Request Failed', errorMsg);
+    }
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <View style={[styles.card, { backgroundColor: themeColors.cardBackground }]}>
+        <Text style={[styles.header, { color: themeColors.text }]}>
+          Email Validation
+        </Text>
+        <Text style={[styles.text, { color: themeColors.text }]}>
+          Check your email to validate your account
+        </Text>
+        <Text style={styles.sendButtonText}>Resend Email</Text>
+        <TouchableOpacity
+          style={[styles.sendButton, { backgroundColor: '#ff6b6b' }]}
+          //</View>onPress={resendEmail} TODO: when resendEmail is created, uncomment this
+        >
+            <Text style={styles.sendButtonText}>Send Reset Link</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={[styles.backText, { color: themeColors.text }]}>
+            ← Back to Signup
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  card: {
+    width: CARD_WIDTH,
+    padding: 24,
+    borderRadius: 12,
+    // iOS shadow:
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    // Android elevation:
+    elevation: 4,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    padding: 12,
+    marginBottom: 16,
+    borderRadius: 4,
+  },
+  sendButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sendButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  backText: {
+    fontSize: 14,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+  },
+  text: {
+    fontSize: 14,
+    textAlign: 'center',
+  }
+});
+
+export default ForgotPasswordScreen;
