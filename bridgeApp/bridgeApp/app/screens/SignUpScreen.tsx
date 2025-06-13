@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet, Alert, Dimensions } from 'react-native';
+import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../ThemeContext';
 import { Colors } from '../constants/colors';
-import { 
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { auth } from "../../firebaseConfig";
 
 type RootStackParamList = {
   SignUp: undefined;
-  Login: undefined;
-  EmailVerificationNotice: undefined; // screen to prompt user to check inbox
-
+  Login: undefined; // or any other screen you navigate to after signup
 };
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
@@ -38,47 +32,16 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email.trim(),
-        password
-      );
-      const user = userCredential.user;
-
-      await sendEmailVerification(user);
-
-      Alert.alert(
-        'Verify Your Email',
-        'A verification link has been sent to your email address. ' +
-          'Please open it and click the link to verify, then come back and log in.'
-      );
-      navigation.replace('EmailVerificationNotice');
-      /*
       // Update the URL to your FastAPI backend
       await axios.post('http://10.0.2.2:8000/signup', { email, password });
       Alert.alert('Success', 'User created successfully!');
       // Navigate to the login screen after signup
       navigation.navigate('Login');
-      */
     } catch (error: any) {
-      console.error("Signup error: ", error);
-      // Firebase errors usually have a code like 'auth/email-already-in-use'
-      let message = 'An error occurred during sign up';
-      if (error.code === 'auth/email-already-in-use') {
-        message = 'That email address is already in use.';
-      } else if (error.code === 'auth/invalid-email') {
-        message = 'The email address is invalid.';
-      } else if (error.code === 'auth/weak-password') {
-        message = 'The password is too weak. Use at least 6 characters.';
-      } else if (error.message) {
-        message = error.message;
-      }
-      Alert.alert('Sign Up Failed', message);
-      /*
+      console.error(error);
       const errorMsg =
         error.response?.data?.detail || error.message || 'An error occurred during sign up';
       Alert.alert('Sign Up Failed', errorMsg);
-      */
     }
   };
 
