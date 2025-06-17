@@ -3,10 +3,20 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { Picker } from '@react-native-picker/picker';
 import { Colors } from "../constants/colors";
 import { useTheme } from '../ThemeContext';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 type Notis = 'All' | 'Limited' | 'None';
 
-const AccountSettingsScreen: React.FC = () => {
+type AccountStackParamList = {
+  AccountSettings: undefined;
+  AccountDetails: undefined;
+}
+
+type Props = {
+  navigation: StackNavigationProp<AccountStackParamList, 'AccountSettings'>;
+}
+
+const AccountSettingsScreen: React.FC<Props> = ({ navigation }) => {
   const { darkModeEnabled, toggleDarkMode } = useTheme();
   const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
   const [notis, setNotis] = useState<Notis>('All');
