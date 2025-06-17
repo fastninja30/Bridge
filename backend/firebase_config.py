@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth
 
 # Path to your Firebase service account key JSON file.
-SERVICE_ACCOUNT_PATH = "../../bridge-25a39-firebase-adminsdk-fbsvc-70ec53632d.json"
+SERVICE_ACCOUNT_PATH = "../../bridge-eab76-firebase-adminsdk-fbsvc-e9e9601f33.json"
 
 def initialize_firebase():
     """
