@@ -8,6 +8,7 @@ import { Colors } from '../constants/colors';
 type RootStackParamList = {
   SignUp: undefined;
   Login: undefined; // or any other screen you navigate to after signup
+  Email: undefined;
 };
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
@@ -36,7 +37,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
       await axios.post('http://10.0.2.2:8000/signup', { email, password });
       Alert.alert('Success', 'User created successfully!');
       // Navigate to the login screen after signup
-      navigation.navigate('Login');
+      navigation.navigate('Email');
     } catch (error: any) {
       console.error(error);
       const errorMsg =
@@ -79,6 +80,11 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleSignUp}
         >
           <Text style={styles.signUpButtonText}>Sign Up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={[styles.backText, { color: themeColors.text }]}>
+            ← Back to login
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -134,6 +140,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     marginTop: 8,
+    textDecorationLine: 'underline',
+  },
+  backText: {
+    fontSize: 14,
+    marginBottom: 12,
+    textAlign: 'center',
     textDecorationLine: 'underline',
   },
 });
