@@ -6,7 +6,15 @@ resendCfg = Path("../../ResendAPIKey.json")
 config = json.loads(resendCfg.read_text())
 resend.api_key = config["API_KEY"]
 
-def sendEmail(email, link): 
+def sendVerificationEmail(email, code):
+    r = resend.Emails.send({
+    "from": "onboarding@resend.dev",
+    "to": email,
+    "subject": "Verify Your Email",
+    "html": "<p>Please enter the following code in the app: <u>"+code+"</u></p>"
+    })
+
+def sendPasswordResetEmail(email, link): 
     r = resend.Emails.send({
     "from": "onboarding@resend.dev",
     "to": email,
