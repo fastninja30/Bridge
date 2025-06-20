@@ -8,6 +8,7 @@ import { Colors } from '../constants/colors';
 type RootStackParamList = {
   SignUp: undefined;
   Login: undefined; // or any other screen you navigate to after signup
+  Email: { email: string };
 };
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
@@ -35,8 +36,8 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
       // Update the URL to your FastAPI backend
       await axios.post('http://10.0.2.2:8000/signup', { email, password });
       Alert.alert('Success', 'User created successfully!');
-      // Navigate to the login screen after signup
-      navigation.navigate('Login');
+      // Navigate to the email screen after signup
+      navigation.navigate('Email', { email: email });
     } catch (error: any) {
       console.error(error);
       const errorMsg =
