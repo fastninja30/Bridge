@@ -81,6 +81,11 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
         >
           <Text style={styles.signUpButtonText}>Sign Up</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={[styles.backText, { color: themeColors.text }]}>
+            ← Back to login
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -135,6 +140,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     marginTop: 8,
+    textDecorationLine: 'underline',
+  },
+  backText: {
+    fontSize: 14,
+    marginBottom: 12,
+    textAlign: 'center',
     textDecorationLine: 'underline',
   },
 });
