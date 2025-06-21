@@ -1,10 +1,14 @@
 // LoginScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../ThemeContext';
 import { Colors } from '../constants/colors';
+import * as WebBrowswer from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import Constants from 'expo-constants';
+
 
 type RootStackParamList = {
   Auth: undefined;
@@ -74,6 +78,18 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.googleButton}
+          activeOpacity={0.7}
+        >
+          <Image
+            source={require('../../assets/images/google_icon.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.googleButtonText}>Login with Google</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
           <Text style={[styles.forgotText, { color: themeColors.text }]}>
             Forgot Password?
@@ -134,6 +150,30 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: 16,
+  },
+  googleButton: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#ddd',
+    borderRadius: 24,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  logoImage: {
+    position:'absolute',
+    left: 16,
+    width: 20,
+    height: 20,
+    marginRight: 12,
+  },
+  googleButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
   },
   forgotText: {
     fontSize: 14,
