@@ -34,10 +34,12 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
+    
     try {
+      navigation.replace('Main' as any);
       await axios.post('http://10.0.2.2:8000/login', { email, password });
       Alert.alert('Success', 'Logged in successfully!');
-      navigation.replace('Main' as any);
+      
       
     } catch (error: any) {
       console.error(error);
