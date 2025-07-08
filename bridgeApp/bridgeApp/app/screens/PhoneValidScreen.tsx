@@ -1,4 +1,4 @@
-// EmailValidScreen.tsx
+// PhoneValidScreen.tsx
 
 import React, { useState } from 'react';
 import {
@@ -24,25 +24,25 @@ type AuthStackParamList = {
 };
 
 type Props = {
-  navigation: StackNavigationProp<AuthStackParamList, 'Email'>;
+  navigation: StackNavigationProp<AuthStackParamList, 'Phone'>;
 };
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.6;
 
-const EmailValidScreen: React.FC<Props> = ({ navigation }) => {
-  const route = useRoute<RouteProp<AuthStackParamList, 'Email'>>(); 
+const PhoneValidScreen: React.FC<Props> = ({ navigation }) => {
+  const route = useRoute<RouteProp<AuthStackParamList, 'Phone'>>(); 
   const { darkModeEnabled } = useTheme();
   const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
-  const [email] = useState(route.params.email);
+  const [phone] = useState();
   const [code, setCode] = useState('');
 
   //const resendEmail TODO: create resend email function
-  const emailValid = async () => {
+  const phoneValid = async () => {
     try {
       // Adjust this endpoint to whatever your backend expects
-      await axios.post('http://10.0.2.2:8000/email-valid', { email, code });
-      Alert.alert('Success','Email verified!');
+      await axios.post('', { phone, code });
+      Alert.alert('Success','Phone verified!');
       navigation.navigate("Login");
     } catch (error: any) {
       console.error(error);
@@ -56,14 +56,14 @@ const EmailValidScreen: React.FC<Props> = ({ navigation }) => {
     <View style={[styles.container, { backgroundColor: themeColors.background }]}>
       <View style={[styles.card, { backgroundColor: themeColors.cardBackground }]}>
         <Text style={[styles.header, { color: themeColors.text }]}>
-          Email Validation
+          Phone Validation
         </Text>
         <Text style={[styles.text, { color: themeColors.text }]}>
-          Check your email to validate your account
+          Check your text messages to validate your account
         </Text>
 
         <Text style={[styles.text, { color: themeColors.text, marginTop: 16 }]}>
-          Enter the code sent to your email:
+          Enter the code sent to your text messages:
         </Text>
         <TextInput
           style={[styles.input, { borderColor: themeColors.text, color: themeColors.text }]}
@@ -77,11 +77,11 @@ const EmailValidScreen: React.FC<Props> = ({ navigation }) => {
         />
         <TouchableOpacity
                   style={[styles.sendButton, { backgroundColor: '#ff6b6b' }]}
-                  onPress={emailValid}
+                  onPress={phoneValid}
                 >
-                  <Text style={styles.sendButtonText}>Verify Email</Text>
+                  <Text style={styles.sendButtonText}>Verify Phone</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Phone")}>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
           <Text style={[styles.backText, { color: themeColors.text }]}>
             ← Back to Signup
           </Text>
@@ -145,4 +145,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EmailValidScreen;
+export default PhoneValidScreen;
