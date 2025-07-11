@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Colors } from "../constants/colors";
 import { useTheme } from '../ThemeContext';
@@ -50,6 +50,19 @@ const AccountSettingsScreen: React.FC<Props> = ({ navigation }) => {
           </Picker>
         </View>
       </View>
+        
+      <TouchableOpacity 
+        style={styles.googleButton}
+        activeOpacity={0.7}
+      >
+        <Image
+          source={require('../../assets/images/google_icon.png')}
+          style={styles.logoImage}
+          resizeMode="contain"
+        />
+        <Text style={styles.googleButtonText}>Link to Google Account</Text>
+      </TouchableOpacity>
+      
       {/* Logout Button */}
       <TouchableOpacity
         style={styles.deleteButton}
@@ -102,12 +115,35 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 16,
   },
   deleteButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  googleButton: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  logoImage: {
+    position:'absolute',
+    left: 16,
+    width: 20,
+    height: 20,
+    marginRight: 12,
+  },
+  googleButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
   },
 });
 

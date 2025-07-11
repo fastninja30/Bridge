@@ -1,127 +1,95 @@
-import React, { useState, useCallback } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Image } from 'react-native';
+// app/screens/HomeScreen.tsx
+
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { useTheme } from '../ThemeContext';
 import { useMatches } from '../MatchesContext';
 import { Colors } from '../constants/colors';
-// Update: placeholder image asset, add a placeholder.png in your assets folder
-import placeholderImage from '../assets/placeholder.png';
 
-const HomeScreen = () => {
-  const [profiles, setProfiles] = useState([
+interface Profile {
+  id: string;
+  name: string;
+  image: string | null;
+}
+
+const placeholderImage = require('../../assets/images/placeholder.png');
+
+const HomeScreen: React.FC = () => {
+  const [profiles] = useState<Profile[]>([
     { id: '1', name: 'Alice', image: 'https://example.com/alice.jpg' },
-    { id: '2', name: 'Bob', image: 'https://example.com/bob.jpg' },
-    { id: '3', name: 'Carol', image: 'https://example.com/carol.jpg' },
-    // add more profiles as needed
+    { id: '2', name: 'Bob',   image: 'https://example.com/bob.jpg' },
+    { id: '3', name: 'Carol', image: null },  // no URL → placeholder
   ]);
-
+  const [erroredMap, setErroredMap] = useState<Record<string, boolean>>({});
   const { darkModeEnabled } = useTheme();
   const { addMatch } = useMatches();
-  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
+  const theme = darkModeEnabled ? Colors.dark : Colors.light;
 
-  // Local component to handle placeholder fallback
-  const CardImage = ({ uri }: { uri: string }) => {
-    const [loadError, setLoadError] = useState(false);
-    return (
-      <Image
-        style={styles.image}
-        source={
-          loadError || !uri
-            ? placeholderImage
-            : { uri }
-        }
-        onError={() => setLoadError(true)}
-      />
-    );
+  const handleImageError = (id: string) => () => {
+    setErroredMap(m => ({ ...m, [id]: true }));
   };
 
-  const handleSwipedLeft = useCallback((cardIndex: number) => {
-    // TODO: analytics or feedback for passing
-    console.log('Swiped left on card:', cardIndex);
-  }, []);
+  // now a pure renderer — no hooks inside here!
+  const renderCard = (card: Profile) => {
+    // if the remote image failed or is null, fall back to placeholder
+    const source = !erroredMap[card.id] && card.image
+      ? { uri: card.image }
+      : placeholderImage;
 
-  const handleSwipedRight = useCallback((cardIndex: number) => {
-    console.log('Swiped right on card:', cardIndex);
-    const likedProfile = profiles[cardIndex];
-    if (likedProfile) {
-      addMatch(likedProfile);
-    }
-  }, [profiles, addMatch]);
-
-  const renderCard = useCallback(
-    (card) => (
-      <View
-        key={card.id}
-        style={[
-          styles.card,
-          {
-            backgroundColor: themeColors.cardBackground,
-            borderColor: themeColors.cardBorder,
-          },
-        ]}
-      >
-        {/* Use CardImage to show placeholder */}
-        <CardImage uri={card.image} />
-        <Text style={[styles.name, { color: themeColors.text }]}>
+    return (
+      <View style={[styles.card, {
+        backgroundColor: theme.cardBackground,
+        borderColor: theme.cardBorder,
+      }]}>
+        <Image
+          style={styles.image}
+          defaultSource={placeholderImage}     // iOS only but doesn't hurt on Android
+          source={source}
+          onError={handleImageError(card.id)}
+        />
+        <Text style={[styles.name, { color: theme.text }]}>
           {card.name}
         </Text>
       </View>
-    ),
-    [themeColors]
-  );
+    );
+  };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>      
-      <Text style={[styles.title, { color: themeColors.text }]}>Discover Profiles</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.header, { color: theme.text }]}>
+        Discover Profiles
+      </Text>
       <Swiper
-        key={darkModeEnabled ? 'dark' : 'light'}
+        key={darkModeEnabled ? 'dark' : 'light'}  // re-render deck on theme change
         cards={profiles}
         renderCard={renderCard}
-        onSwipedLeft={handleSwipedLeft}
-        onSwipedRight={handleSwipedRight}
+        onSwipedLeft={(i) => console.log('Nope:', i)}
+        onSwipedRight={(i) => {
+          console.log('Liked:', i);
+          addMatch(profiles[i]);
+        }}
         cardIndex={0}
-        backgroundColor={themeColors.background}
+        backgroundColor={theme.background}
         stackSize={3}
         overlayLabels={{
           left: {
             title: 'NOPE',
             style: {
-              label: {
-                backgroundColor: themeColors.rejectLabelBg || 'red',
-                color: themeColors.rejectLabelText || 'white',
-                fontSize: 24,
-                padding: 10,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-                justifyContent: 'flex-start',
-                marginTop: 20,
-                marginLeft: -20,
-              },
+              label: { backgroundColor: 'red', color: 'white', fontSize: 24, padding: 10 },
+              wrapper: { flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-start', marginTop: 20, marginLeft: -20 },
             },
           },
           right: {
             title: 'LIKE',
             style: {
-              label: {
-                backgroundColor: themeColors.acceptLabelBg || 'green',
-                color: themeColors.acceptLabelText || 'white',
-                fontSize: 24,
-                padding: 10,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                marginTop: 20,
-                marginLeft: 20,
-              },
+              label: { backgroundColor: 'green', color: 'white', fontSize: 24, padding: 10 },
+              wrapper: { flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 20, marginLeft: 20 },
             },
           },
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -129,12 +97,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 16,
+    paddingTop: 40,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 12,
+  header: {
+    fontSize: 18,
+    marginBottom: 10,
   },
   card: {
     flex: 0.75,
@@ -150,6 +117,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '80%',
+    resizeMode: 'contain',
   },
   name: {
     fontSize: 20,
