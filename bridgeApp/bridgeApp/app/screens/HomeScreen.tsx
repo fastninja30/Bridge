@@ -118,4 +118,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+<<<<<<< HEAD
 export default HomeScreen;
+=======
+export default HomeScreen;
+>>>>>>> 0a092dc522d3d9508443d42e626bc07ecdf2412b

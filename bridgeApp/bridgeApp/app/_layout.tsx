@@ -23,6 +23,7 @@ import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
 import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
 import EmailValidScreen from './screens/EmailValidScreen';
+import PhoneValidScreen from './screens/PhoneValidScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -168,6 +169,11 @@ function AuthStack() {
         name="Email" 
         component={EmailValidScreen}
         options={{ headerShown: false }} 
+      />
+      <Stack.Screen
+        name="Phone"
+        component={PhoneValidScreen}
+        options={{ headerShown:false }}
       />
     </Stack.Navigator>
   );
