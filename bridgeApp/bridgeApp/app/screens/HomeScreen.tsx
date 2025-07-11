@@ -1,11 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
 import { useTheme } from '../ThemeContext';
 import { useMatches } from '../MatchesContext';
 import { Colors } from '../constants/colors';
-// Update: placeholder image asset, add a placeholder.png in your assets folder
-import placeholderImage from '../assets/placeholder.png';
 
 const HomeScreen = () => {
   const [profiles, setProfiles] = useState([
@@ -14,81 +12,45 @@ const HomeScreen = () => {
     { id: '3', name: 'Carol', image: 'https://example.com/carol.jpg' },
     // add more profiles as needed
   ]);
-
   const { darkModeEnabled } = useTheme();
   const { addMatch } = useMatches();
   const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
-
-  // Local component to handle placeholder fallback
-  const CardImage = ({ uri }: { uri: string }) => {
-    const [loadError, setLoadError] = useState(false);
-    return (
-      <Image
-        style={styles.image}
-        source={
-          loadError || !uri
-            ? placeholderImage
-            : { uri }
-        }
-        onError={() => setLoadError(true)}
-      />
-    );
-  };
-
-  const handleSwipedLeft = useCallback((cardIndex: number) => {
-    // TODO: analytics or feedback for passing
-    console.log('Swiped left on card:', cardIndex);
-  }, []);
-
-  const handleSwipedRight = useCallback((cardIndex: number) => {
-    console.log('Swiped right on card:', cardIndex);
-    const likedProfile = profiles[cardIndex];
-    if (likedProfile) {
-      addMatch(likedProfile);
-    }
-  }, [profiles, addMatch]);
-
-  const renderCard = useCallback(
-    (card) => (
-      <View
-        key={card.id}
-        style={[
-          styles.card,
-          {
-            backgroundColor: themeColors.cardBackground,
-            borderColor: themeColors.cardBorder,
-          },
-        ]}
-      >
-        {/* Use CardImage to show placeholder */}
-        <CardImage uri={card.image} />
-        <Text style={[styles.name, { color: themeColors.text }]}>
-          {card.name}
-        </Text>
-      </View>
-    ),
-    [themeColors]
+  const renderCard = (card) => (
+    <View style={[styles.card, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
+      <Image style={styles.image} source={{ uri: card.image }} />
+      <Text style={[styles.name, { color: themeColors.text }]}>
+        {card.name}
+      </Text>
+    </View>
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>      
-      <Text style={[styles.title, { color: themeColors.text }]}>Discover Profiles</Text>
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Text style={[styles.text, { color: themeColors.text }]}>
+        Discover Profiles
+      </Text>
       <Swiper
         key={darkModeEnabled ? 'dark' : 'light'}
         cards={profiles}
         renderCard={renderCard}
-        onSwipedLeft={handleSwipedLeft}
-        onSwipedRight={handleSwipedRight}
+        onSwipedLeft={(cardIndex) =>
+          console.log('Swiped left on card:', cardIndex)
+        }
+        onSwipedRight={(cardIndex) => {
+          console.log('Swiped right on card:', cardIndex);
+          const likedProfile = profiles[cardIndex];
+          addMatch(likedProfile);
+        }}
         cardIndex={0}
-        backgroundColor={themeColors.background}
+        backgroundColor={darkModeEnabled ? '#121212' : '#f0f0f0'}
         stackSize={3}
         overlayLabels={{
           left: {
             title: 'NOPE',
             style: {
               label: {
-                backgroundColor: themeColors.rejectLabelBg || 'red',
-                color: themeColors.rejectLabelText || 'white',
+                backgroundColor: 'red',
+                color: 'white',
                 fontSize: 24,
                 padding: 10,
               },
@@ -105,8 +67,8 @@ const HomeScreen = () => {
             title: 'LIKE',
             style: {
               label: {
-                backgroundColor: themeColors.acceptLabelBg || 'green',
-                color: themeColors.acceptLabelText || 'white',
+                backgroundColor: 'green',
+                color: 'white',
                 fontSize: 24,
                 padding: 10,
               },
@@ -121,7 +83,7 @@ const HomeScreen = () => {
           },
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -129,12 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 12,
+    paddingTop: 40,
   },
   card: {
     flex: 0.75,
@@ -157,6 +114,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 10,
   },
+  text: {
+    fontSize: 18,
+  },
 });
-
 export default HomeScreen;
