@@ -10,7 +10,7 @@ try:
     AUTH_TOKEN = config["API_KEY"]
 
     # TODO: store your Twilio phone number in the config.
-    TWILIO_PHONE_NUMBER = config.get("TWILIO_PHONE_NUMBER") 
+    TWILIO_PHONE_NUMBER = config["TWILIO_PHONE_NUMBER"] 
 except FileNotFoundError:
     print("Error: Twilio configuration file not found.")
     exit()

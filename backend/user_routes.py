@@ -3,17 +3,23 @@ from pydantic import BaseModel
 from firebase_admin import firestore
 from firebase_config import db, auth_client
 from email_sender import sendPasswordResetEmail, sendVerificationEmail
+from text_sender import send_verification_sms
 import random
 import string
 
 router = APIRouter()
 
 # Define a Pydantic model for the signup request
-class UserVerification(BaseModel):
+class EmailUserVerification(BaseModel):
     email: str
     code: str
 
+class PhoneUserVerification(BaseModel):
+    phone: str
+    code: str
+
 class UserSignUp(BaseModel):
+    phone: str
     email: str
     password: str
 
@@ -29,23 +35,29 @@ def sign_up(user: UserSignUp):
     try:
         # Create a new user using Firebase Authentication.
         firebase_user = auth_client.create_user(
+            phone=user.phone,
             email=user.email,
             password=user.password,
         )
 
-        verification_code = ''.join(random.choices(string.digits, k=6))
+        email_verification_code = ''.join(random.choices(string.digits, k=6))
+        phone_verification_code = ''.join(random.choices(string.digits, k=6))
 
         # Store data
         db.collection("users").document(firebase_user.uid).set({
+            "phone": user.phone,
             "email": user.email,
             "password": user.password,
-            "verified": False,
-            "verification_code": verification_code,
+            "email_verified": False,
+            "email_verification_code": email_verification_code,
+            "phone_verified": False,
+            "phone_verification_code": phone_verification_code
         })
         # for testing purposes can only send email to acc owner's email
-        sendVerificationEmail(user.email, verification_code)
+        sendVerificationEmail(user.email, email_verification_code)
+        send_verification_sms(user.phone, phone_verification_code)
 
-        return {"message": "User created. Verification code sent via email", "uid": firebase_user.uid}
+        return {"message": "User created. Seperate verification codes sent via email & text", "uid": firebase_user.uid}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -64,8 +76,11 @@ def login(user: UserLogin):
     if data.get("password") != user.password:
         raise HTTPException(status_code=402, detail="Invalid password")
 
-    if data.get("verified") == False:
-        raise HTTPException(status_code=403, detail="Not verified")
+    if data.get("email_verified") == False:
+        raise HTTPException(status_code=410, detail="Email not verified")
+    
+    if data.get("phone_verified") == False:
+        raise HTTPException(status_code=411, detail="Phone not verified")
 
     # 3. (Optional) Issue a Firebase custom auth token
     try:
@@ -112,7 +127,7 @@ def forgot_password(payload: ForgotPasswordRequest):
         raise HTTPException(status_code=400, detail=str(e))
     
 @router.post("/email-valid")
-def verify_email(verification: UserVerification):
+def verify_email(verification: EmailUserVerification):
     try:
         users_ref = db.collection("users")
         query = users_ref.where("email", "==", verification.email).limit(1).get()
@@ -122,19 +137,48 @@ def verify_email(verification: UserVerification):
         doc = query[0]
         user_data = doc.to_dict()
 
-        if user_data.get("verified"):
+        if user_data.get("email_verified"):
             return {"message": "Email already verified"}
 
-        if user_data.get("verification_code") != verification.code:
+        if user_data.get("email_verification_code") != verification.code:
             raise HTTPException(status_code=400, detail="Incorrect verification code")
 
         # Update user as verified
         users_ref.document(doc.id).update({
-            "verified": True,
-            "verification_code": firestore.DELETE_FIELD  # optionally delete the code
+            "email_verified": True,
+            "email_verification_code": firestore.DELETE_FIELD  
         })
 
         return {"message": "Email verified successfully"}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+    
+@router.post("/phone-valid")
+def verify_email(verification: PhoneUserVerification):
+    try:
+        users_ref = db.collection("users")
+        query = users_ref.where("phone", "==", verification.phone).limit(1).get()
+        if not query:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        doc = query[0]
+        user_data = doc.to_dict()
+
+        if user_data.get("phone_verified"):
+            return {"message": "Phone already verified"}
+
+        if user_data.get("phone_verification_code") != verification.code:
+            raise HTTPException(status_code=400, detail="Incorrect verification code")
+
+        # Update user as verified
+        users_ref.document(doc.id).update({
+            "phone_verified": True,
+            "phone_verification_code": firestore.DELETE_FIELD  
+        })
+
+        return {"message": "Phone verified successfully"}
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

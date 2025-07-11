@@ -43,7 +43,7 @@ const EmailValidScreen: React.FC<Props> = ({ navigation }) => {
       // Adjust this endpoint to whatever your backend expects
       await axios.post('http://10.0.2.2:8000/email-valid', { email, code });
       Alert.alert('Success','Email verified!');
-      navigation.navigate("Login");
+      navigation.navigate("Phone");
     } catch (error: any) {
       console.error(error);
       const errorMsg =

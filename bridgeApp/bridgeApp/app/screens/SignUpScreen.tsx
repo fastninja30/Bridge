@@ -7,7 +7,8 @@ import { Colors } from '../constants/colors';
 
 type RootStackParamList = {
   SignUp: undefined;
-  Login: undefined; // or any other screen you navigate to after signup
+  Login: undefined; 
+  Phone: { phone: string};
   Email: { email: string };
 };
 
@@ -22,6 +23,7 @@ const { width } = Dimensions.get('window');
 const SignUpScreen: React.FC<Props> = ({ navigation }) => {
   const { darkModeEnabled } = useTheme();
   const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,7 +36,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
 
     try {
       // Update the URL to your FastAPI backend
-      await axios.post('http://10.0.2.2:8000/signup', { email, password });
+      await axios.post('http://10.0.2.2:8000/signup', { phone, email, password });
       Alert.alert('Success', 'User created successfully!');
       // Navigate to the email screen after signup
       navigation.navigate('Email', { email: email });
@@ -50,6 +52,16 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     <View style={[styles.container, { backgroundColor: themeColors.background }]}>
       <View style={[styles.card, { backgroundColor: themeColors.cardBackground }]}>
         <Text style={[styles.header, { color: themeColors.text }]}>Sign Up</Text>
+        <TextInput
+          placeholder="Phone Number"
+          placeholderTextColor={themeColors.text}
+          value={phone}
+          onChangeText={setPhone}
+          autoCapitalize="none"
+          keyboardType="phone-pad"
+          inputMode="tel"
+          style={[styles.input, { borderColor: themeColors.cardBorder, color: themeColors.text }]}
+        />
         <TextInput
           placeholder="Email"
           placeholderTextColor={themeColors.text}

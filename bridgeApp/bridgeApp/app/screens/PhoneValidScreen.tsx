@@ -41,7 +41,7 @@ const PhoneValidScreen: React.FC<Props> = ({ navigation }) => {
   const phoneValid = async () => {
     try {
       // Adjust this endpoint to whatever your backend expects
-      await axios.post('', { phone, code });
+      await axios.post('http://10.0.2.2:8000/phone-valid', { phone, code });
       Alert.alert('Success','Phone verified!');
       navigation.navigate("Login");
     } catch (error: any) {
