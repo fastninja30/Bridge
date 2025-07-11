@@ -1,3 +1,5 @@
+// app/screens/HomeScreen.tsx
+
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
@@ -5,80 +7,84 @@ import { useTheme } from '../ThemeContext';
 import { useMatches } from '../MatchesContext';
 import { Colors } from '../constants/colors';
 
-const HomeScreen = () => {
-  const [profiles, setProfiles] = useState([
+interface Profile {
+  id: string;
+  name: string;
+  image: string | null;
+}
+
+const placeholderImage = require('../../assets/images/placeholder.png');
+
+const HomeScreen: React.FC = () => {
+  const [profiles] = useState<Profile[]>([
     { id: '1', name: 'Alice', image: 'https://example.com/alice.jpg' },
-    { id: '2', name: 'Bob', image: 'https://example.com/bob.jpg' },
-    { id: '3', name: 'Carol', image: 'https://example.com/carol.jpg' },
-    // add more profiles as needed
+    { id: '2', name: 'Bob',   image: 'https://example.com/bob.jpg' },
+    { id: '3', name: 'Carol', image: null },  // no URL → placeholder
   ]);
+  const [erroredMap, setErroredMap] = useState<Record<string, boolean>>({});
   const { darkModeEnabled } = useTheme();
   const { addMatch } = useMatches();
-  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
-  const renderCard = (card) => (
-    <View style={[styles.card, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
-      <Image style={styles.image} source={{ uri: card.image }} />
-      <Text style={[styles.name, { color: themeColors.text }]}>
-        {card.name}
-      </Text>
-    </View>
-  );
+  const theme = darkModeEnabled ? Colors.dark : Colors.light;
+
+  const handleImageError = (id: string) => () => {
+    setErroredMap(m => ({ ...m, [id]: true }));
+  };
+
+  // now a pure renderer — no hooks inside here!
+  const renderCard = (card: Profile) => {
+    // if the remote image failed or is null, fall back to placeholder
+    const source = !erroredMap[card.id] && card.image
+      ? { uri: card.image }
+      : placeholderImage;
+
+    return (
+      <View style={[styles.card, {
+        backgroundColor: theme.cardBackground,
+        borderColor: theme.cardBorder,
+      }]}>
+        <Image
+          style={styles.image}
+          defaultSource={placeholderImage}     // iOS only but doesn't hurt on Android
+          source={source}
+          onError={handleImageError(card.id)}
+        />
+        <Text style={[styles.name, { color: theme.text }]}>
+          {card.name}
+        </Text>
+      </View>
+    );
+  };
 
   return (
-    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
-      <Text style={[styles.text, { color: themeColors.text }]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.header, { color: theme.text }]}>
         Discover Profiles
       </Text>
       <Swiper
-        key={darkModeEnabled ? 'dark' : 'light'}
+        key={darkModeEnabled ? 'dark' : 'light'}  // re-render deck on theme change
         cards={profiles}
         renderCard={renderCard}
-        onSwipedLeft={(cardIndex) =>
-          console.log('Swiped left on card:', cardIndex)
-        }
-        onSwipedRight={(cardIndex) => {
-          console.log('Swiped right on card:', cardIndex);
-          const likedProfile = profiles[cardIndex];
-          addMatch(likedProfile);
+        onSwipedLeft={(i) => console.log('Nope:', i)}
+        onSwipedRight={(i) => {
+          console.log('Liked:', i);
+          addMatch(profiles[i]);
         }}
         cardIndex={0}
-        backgroundColor={darkModeEnabled ? '#121212' : '#f0f0f0'}
+        backgroundColor={theme.background}
         stackSize={3}
         overlayLabels={{
           left: {
             title: 'NOPE',
             style: {
-              label: {
-                backgroundColor: 'red',
-                color: 'white',
-                fontSize: 24,
-                padding: 10,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-                justifyContent: 'flex-start',
-                marginTop: 20,
-                marginLeft: -20,
-              },
+              label: { backgroundColor: 'red', color: 'white', fontSize: 24, padding: 10 },
+              wrapper: { flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-start', marginTop: 20, marginLeft: -20 },
             },
           },
           right: {
             title: 'LIKE',
             style: {
-              label: {
-                backgroundColor: 'green',
-                color: 'white',
-                fontSize: 24,
-                padding: 10,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                marginTop: 20,
-                marginLeft: 20,
-              },
+              label: { backgroundColor: 'green', color: 'white', fontSize: 24, padding: 10 },
+              wrapper: { flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 20, marginLeft: 20 },
             },
           },
         }}
@@ -92,6 +98,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: 40,
+  },
+  header: {
+    fontSize: 18,
+    marginBottom: 10,
   },
   card: {
     flex: 0.75,
@@ -107,6 +117,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '80%',
+    resizeMode: 'contain',
   },
   name: {
     fontSize: 20,
@@ -114,12 +125,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 10,
   },
-  text: {
-    fontSize: 18,
-  },
 });
-<<<<<<< HEAD
+
 export default HomeScreen;
-=======
-export default HomeScreen;
->>>>>>> 0a092dc522d3d9508443d42e626bc07ecdf2412b
