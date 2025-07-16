@@ -1,37 +1,104 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { useTheme } from '../ThemeContext';
 import { Colors } from '../constants/colors';
+
+const placeholderImage = require('../../assets/images/placeholder.png');
+
 const ProfileScreen = () => {
-  // Dummy user profile data
   const { darkModeEnabled } = useTheme();
+
+  // track which images have errored
+  const [erroredMap, setErroredMap] = useState<Record<string, boolean>>({});
+  const handleImageError = (key: string) => () => {
+    setErroredMap((m) => ({ ...m, [key]: true }));
+  };
+
+  // Dummy user profile data
   const user = {
     name: 'John Doe',
     age: 23,
     bio: 'Adventure seeker and coffee lover. Always up for a good conversation!',
     photos: [
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
+      'https://via.placeholder.com/300/FF0000', // you can swap in real URLs
+      'https://via.placeholder.com/300/00FF00',
+      'https://via.placeholder.com/300/0000FF',
     ],
   };
+
   const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
+
+  // header image source (fallback if it errors)
+  const headerKey = 'header';
+  const headerSource = erroredMap[headerKey]
+    ? placeholderImage
+    : { uri: user.photos[0] };
+
   return (
-    <ScrollView style={[styles.container, { backgroundColor: themeColors.background }]}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: themeColors.background }]}
+    >
       {/* Profile Header */}
-      <View style={[styles.header, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
-        <Image source={{ uri: user.photos[0] }} style={styles.profileImage} />
-        <Text style={[styles.name, darkModeEnabled && styles.darkName]}>{user.name}, {user.age}</Text>
-        <Text style={[styles.bio, darkModeEnabled && styles.darkBio]}>{user.bio}</Text>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: themeColors.cardBackground,
+            borderColor: themeColors.cardBorder,
+          },
+        ]}
+      >
+        <Image
+          source={headerSource}
+          defaultSource={placeholderImage}
+          onError={handleImageError(headerKey)}
+          style={styles.profileImage}
+        />
+        <Text style={[styles.name, darkModeEnabled && styles.darkName]}>
+          {user.name}, {user.age}
+        </Text>
+        <Text style={[styles.bio, darkModeEnabled && styles.darkBio]}>
+          {user.bio}
+        </Text>
       </View>
 
       {/* Photos Section */}
-      <View style={[styles.photosSection, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
-        <Text style={[styles.sectionTitle, darkModeEnabled && styles.darkSectionTitle]}>Photos</Text>
+      <View
+        style={[
+          styles.photosSection,
+          {
+            backgroundColor: themeColors.cardBackground,
+            borderColor: themeColors.cardBorder,
+          },
+        ]}
+      >
+        <Text style={[styles.sectionTitle, darkModeEnabled && styles.darkSectionTitle]}>
+          Photos
+        </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {user.photos.map((photo, index) => (
-            <Image key={index} source={{ uri: photo }} style={styles.photo} />
-          ))}
+          {user.photos.map((photo, index) => {
+            const key = `photo-${index}`;
+            const source = erroredMap[key]
+              ? placeholderImage
+              : { uri: photo };
+
+            return (
+              <Image
+                key={key}
+                source={source}
+                defaultSource={placeholderImage}
+                onError={handleImageError(key)}
+                style={styles.photo}
+              />
+            );
+          })}
         </ScrollView>
       </View>
 
@@ -48,19 +115,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  darkContainer: {
-    backgroundColor: '#1e1e1e'
-  },
   header: {
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
-  },
-  darkHeader: {
-    backgroundColor: '#333',
-    borderBottomColor: '#555'
   },
   profileImage: {
     width: 120,
@@ -74,7 +134,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   darkName: {
-    color: '#fff'
+    color: '#fff',
   },
   bio: {
     fontSize: 16,
@@ -83,15 +143,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   darkBio: {
-    color: '#eee'
+    color: '#eee',
   },
   photosSection: {
     padding: 16,
     backgroundColor: '#fff',
     marginTop: 16,
-  },
-  darkPhotosSection: {
-    backgroundColor: '#333'
   },
   sectionTitle: {
     fontSize: 18,
@@ -100,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   darkSectionTitle: {
-    color: '#fff'
+    color: '#fff',
   },
   photo: {
     width: 150,

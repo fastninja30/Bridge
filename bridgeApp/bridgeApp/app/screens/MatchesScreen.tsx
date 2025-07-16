@@ -1,35 +1,61 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../ThemeContext';
 import { useMatches } from '../MatchesContext';
 import { Colors } from '../constants/colors';
 
+const placeholderImage = require('../../assets/images/placeholder.png');
+
 const MatchesScreen = () => {
   const navigation = useNavigation();
   const { darkModeEnabled } = useTheme();
   const { matches } = useMatches();
+
+  const [erroredMap, setErroredMap] = useState<Record<string, boolean>>({});
   const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
+  const handleImageError = (id: string) => () => {
+    setErroredMap(m => ({ ...m, [id]: true }));
+  };
   // Render each matched profile
-  const renderMatch = ({ item }) => (
-    <View style={[styles.matchCard, { backgroundColor: themeColors.cardBackground, borderColor: themeColors.cardBorder }]}>
-      <Image source={{ uri: item.image }} style={styles.profileImage} />
-      <View style={styles.profileInfo}>
-        <Text style={[styles.name, { color: themeColors.text }]}>
-          {item.name}
-        </Text>
-        <Text style={[styles.bio, { color: themeColors.text }]}>
-          {item.bio}
-        </Text>
-      </View>
-      <TouchableOpacity
-        style={styles.chatButton}
-        onPress={() => navigation.navigate('Chat', { userId: item.id })}
+  const renderMatch = ({ item }: { item: { id: string; name: string; bio: string; image?: string } }) => {
+    const source = !erroredMap[item.id] && item.image
+      ? { uri: item.image }
+      : placeholderImage;
+
+    return (
+      <View
+        style={[
+          styles.matchCard,
+          {
+            backgroundColor: themeColors.cardBackground,
+            borderColor: themeColors.cardBorder,
+          },
+        ]}
       >
-        <Text style={styles.chatButtonText}>Chat</Text>
-      </TouchableOpacity>
-    </View>
-  );
+        <Image
+          style={styles.profileImage}
+          defaultSource={placeholderImage}
+          source={source}
+          onError={handleImageError(item.id)}
+        />
+        <View style={styles.profileInfo}>
+          <Text style={[styles.name, { color: themeColors.text }]}>
+            {item.name}
+          </Text>
+          <Text style={[styles.bio, { color: themeColors.text }]}>
+            {item.bio}
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.chatButton}
+          // onPress={() => navigation.navigate('Chat', { userId: item.id })}
+        >
+          <Text style={styles.chatButtonText}>Chat</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: themeColors.background }]}>
