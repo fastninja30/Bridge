@@ -7,12 +7,14 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../ThemeContext';
 import { Colors } from '../constants/colors';
 
 const placeholderImage = require('../../assets/images/placeholder.png');
 
-const ProfileScreen = () => {
+const ProfileScreen: React.FC = () => {
+  const navigation = useNavigation();
   const { darkModeEnabled } = useTheme();
 
   // track which images have errored
@@ -103,7 +105,10 @@ const ProfileScreen = () => {
       </View>
 
       {/* Edit Profile Button */}
-      <TouchableOpacity style={styles.editButton}>
+      <TouchableOpacity
+        style={styles.editButton}
+        //onPress={() => navigation.navigate('EditProfile')}
+      >
         <Text style={styles.editButtonText}>Edit Profile</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -146,7 +151,7 @@ const styles = StyleSheet.create({
     color: '#eee',
   },
   photosSection: {
-    padding: 16,
+    padding: 160,
     backgroundColor: '#fff',
     marginTop: 16,
   },
