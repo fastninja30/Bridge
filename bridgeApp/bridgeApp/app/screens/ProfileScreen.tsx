@@ -8,13 +8,21 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../ThemeContext';
 import { Colors } from '../constants/colors';
 
+type ProfileStackParamList = {
+  Profile: undefined;
+  Edit: undefined
+}
+
+type Props = {
+  navigation: StackNavigationProp<ProfileStackParamList, 'Profile'>;
+}
 const placeholderImage = require('../../assets/images/placeholder.png');
 
-const ProfileScreen: React.FC = () => {
-  const navigation = useNavigation();
+const ProfileScreen: React.FC<Props> = ({ navigation }) => {
   const { darkModeEnabled } = useTheme();
 
   // track which images have errored
@@ -107,7 +115,7 @@ const ProfileScreen: React.FC = () => {
       {/* Edit Profile Button */}
       <TouchableOpacity
         style={styles.editButton}
-        //onPress={() => navigation.navigate('EditProfile')}
+        onPress={() => navigation.navigate('Edit')}
       >
         <Text style={styles.editButtonText}>Edit Profile</Text>
       </TouchableOpacity>

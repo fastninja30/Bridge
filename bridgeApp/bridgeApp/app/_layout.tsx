@@ -24,6 +24,7 @@ import LoginScreen from './screens/LoginScreen';
 import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
 import EmailValidScreen from './screens/EmailValidScreen';
 import PhoneValidScreen from './screens/PhoneValidScreen';
+import EditProfileScreen from './screens/EditProfile';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -138,7 +139,7 @@ function AppNavigator() {
         <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Discover' , headerShadowVisible: false}} />
         <Tab.Screen name="Matches" component={MatchesScreen} options={{ title: 'Matches' , headerShadowVisible: false}} />
         <Tab.Screen name="Chat" component={ChatStack} options={{ title: 'Chat' , headerShadowVisible: false}} />
-        <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' , headerShadowVisible: false}} />
+        <Tab.Screen name="Profile" component={ProfileStack} options={{ title: 'Profile' , headerShadowVisible: false}} />
         <Tab.Screen name="Settings" component={SettingsStack} options={{ title: 'Settings' , headerShadowVisible: false}} />
       </Tab.Navigator>
     </View>
@@ -174,6 +175,22 @@ function AuthStack() {
         name="Phone"
         component={PhoneValidScreen}
         options={{ headerShown:false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+
+function ProfileStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+      />
+      <Stack.Screen
+        name="Edit"
+        component={EditProfileScreen}
       />
     </Stack.Navigator>
   );
