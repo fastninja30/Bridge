@@ -90,7 +90,6 @@ function SettingsStack() {
           title: 'Account Settings',
           headerStyle: {
             backgroundColor: themeColors.tabBackground,
-            // optional: remove shadow to match your other headers
             borderBottomWidth: 0,
             elevation: 0,
             shadowOpacity: 0,
@@ -182,15 +181,27 @@ function AuthStack() {
 
 
 function ProfileStack() {
+  const { darkModeEnabled } = useTheme();
+  const themeColors = darkModeEnabled ? Colors.dark : Colors.light;
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Profile"
         component={ProfileScreen}
+        options={{ headerShown: false }} 
       />
       <Stack.Screen
         name="Edit"
         component={EditProfileScreen}
+        options={{
+          headerStyle: {
+            backgroundColor: themeColors.tabBackground,
+            borderBottomWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerTintColor: themeColors.text,
+        }}
       />
     </Stack.Navigator>
   );

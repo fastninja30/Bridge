@@ -12,6 +12,7 @@ import {
 import { useTheme } from '../ThemeContext';
 import { Colors } from '../constants/colors';
 
+
 const placeholderImage = require('../../assets/images/placeholder.png');
 
 // Dummy initial user data (replace with props or context as needed)
@@ -65,8 +66,14 @@ const EditProfileScreen: React.FC = () => {
       {/* Name Input */}
       <View style={styles.fieldContainer}>
         <Text style={[styles.label, darkModeEnabled && styles.darkLabel]}>Name</Text>
-        <TextInput
-          style={[styles.input, { borderColor: themeColors.cardBorder }]}
+        <TextInput 
+          style={[styles.input,
+            {
+              borderColor: themeColors.cardBorder,
+              backgroundColor: themeColors.cardBackground,
+              color: themeColors.text,
+            },
+          ]}
           value={name}
           onChangeText={setName}
           placeholder="Enter your name"
@@ -78,7 +85,13 @@ const EditProfileScreen: React.FC = () => {
       <View style={styles.fieldContainer}>
         <Text style={[styles.label, darkModeEnabled && styles.darkLabel]}>Age</Text>
         <TextInput
-          style={[styles.input, { borderColor: themeColors.cardBorder }]}
+          style={[styles.input,
+            {
+              borderColor: themeColors.cardBorder,
+              backgroundColor: themeColors.cardBackground,
+              color: themeColors.text,
+            },
+          ]}
           value={age}
           onChangeText={setAge}
           keyboardType="numeric"
@@ -91,10 +104,12 @@ const EditProfileScreen: React.FC = () => {
       <View style={styles.fieldContainer}>
         <Text style={[styles.label, darkModeEnabled && styles.darkLabel]}>Bio</Text>
         <TextInput
-          style={[
-            styles.input,
-            styles.textArea,
-            { borderColor: themeColors.cardBorder },
+          style={[styles.input,
+            {
+              borderColor: themeColors.cardBorder,
+              backgroundColor: themeColors.cardBackground,
+              color: themeColors.text,
+            },
           ]}
           value={bio}
           onChangeText={setBio}
@@ -107,7 +122,7 @@ const EditProfileScreen: React.FC = () => {
       </View>
 
       {/* Photos Management */}
-      <View style={[styles.photosSection, { borderColor: themeColors.cardBorder }]}>
+      <View style={[styles.photosSection, { borderColor: themeColors.cardBorder, backgroundColor: themeColors.cardBackground, }]}>
         <Text style={[styles.sectionTitle, darkModeEnabled && styles.darkSectionTitle]}>Photos</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {photos.map((uri, index) => {
@@ -133,7 +148,14 @@ const EditProfileScreen: React.FC = () => {
         </ScrollView>
         <View style={styles.addPhotoContainer}>
           <TextInput
-            style={[styles.input, { flex: 1, borderColor: themeColors.cardBorder }]}
+            style={[styles.input, 
+              { 
+                flex: 1, 
+                borderColor: themeColors.cardBorder,
+                backgroundColor: themeColors.cardBackground,
+                color: themeColors.text,
+              },
+            ]}
             value={newPhotoUrl}
             onChangeText={setNewPhotoUrl}
             placeholder="Photo URL"
@@ -186,7 +208,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
-    backgroundColor: '#fff',
     marginBottom: 24,
   },
   sectionTitle: {
